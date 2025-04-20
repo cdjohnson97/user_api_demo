@@ -1,7 +1,7 @@
 # Build stage
 FROM maven:3.8.6-eclipse-temurin-17-alpine AS build
 WORKDIR /app
-COPY ../.. .
+COPY .. .
 RUN ./mvnw clean package -DskipTests
 
 # Run stage
@@ -22,4 +22,4 @@ EXPOSE 8080
 ENV JAVA_OPTS=""
 
 # Run the application
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "app.jar"]

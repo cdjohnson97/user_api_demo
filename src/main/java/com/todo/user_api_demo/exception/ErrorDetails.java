@@ -1,2 +1,13 @@
-package com.todo.user_api_demo.exception;public class ErrorDetails {
+package com.todo.user_api_demo.exception;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import java.time.LocalDateTime;
+
+@Data
+@AllArgsConstructor
+public class ErrorDetails {
+    private LocalDateTime timestamp;
+    private String message;
+    private String details;
 }
