@@ -1,25 +1,38 @@
-# Build stage
+# -------- Build Stage --------
 FROM maven:3.8.6-eclipse-temurin-17-alpine AS build
+
 WORKDIR /app
-COPY .. .
+
+# Copie uniquement les fichiers nécessaires pour éviter les rebuild inutiles
+COPY pom.xml mvnw ./
+COPY .mvn .mvn
+RUN chmod +x mvnw
+RUN ./mvnw dependency:go-offline
+
+# Ensuite on copie le reste du code source
+COPY src ./src
+
+# Compile l'application sans exécuter les tests
 RUN ./mvnw clean package -DskipTests
 
-# Run stage
+
+# -------- Run Stage --------
 FROM eclipse-temurin:17-jre-alpine
+
 WORKDIR /app
 
-# Copy the JAR file from the build stage
+# Copie l'application depuis l'étape de build
 COPY --from=build /app/target/user_api_demo-0.0.1-SNAPSHOT.jar app.jar
 
-# Create a non-root user to run the application
+# Crée un utilisateur non-root
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 
-# Expose the port the app runs on
+# Expose le port de l'application
 EXPOSE 8080
 
-# Set JVM options if needed
+# Permet de passer des options JVM au besoin
 ENV JAVA_OPTS=""
 
-# Run the application
-ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "app.jar"]
+# Commande d'exécution
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Dspring.profiles.active=docker -jar app.jar"]
