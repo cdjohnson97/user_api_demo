@@ -18,6 +18,8 @@ services:
       retries: 5
 
   app:
+    image: chanceng/springboot-app:latest
+    container_name: springboot-app
     build: .  # Assumes Dockerfile is in the root directory
     ports:
       - "8080:8080"
@@ -28,6 +30,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/userDB
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
+    restart: on-failure
 
 volumes:
   mysql_data:

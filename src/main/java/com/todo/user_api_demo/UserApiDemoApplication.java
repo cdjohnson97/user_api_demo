@@ -8,7 +8,7 @@ public class UserApiDemoApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(UserApiDemoApplication.class, args);
-        System.out.println("Lancement avec succèss avec github actions !...");
+        System.out.println("Application lancée avec succèes depuis la dernière jour !...");
     }
 
 }
